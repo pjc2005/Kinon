@@ -96,22 +96,30 @@ static class Program
                 "Kinon - 错误", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
-        // 5) Create overlay form (starts hidden via SetVisibleCore)
+        // 5) First-launch setup wizard
+        if (AppSettings.IsFirstLaunch)
+        {
+            using var setup = new Config.SetupWizardForm();
+            setup.ShowDialog();
+            AppSettings.Save();
+        }
+
+        // 6) Create overlay form (not passed to Run — stays hidden)
         _overlayForm = new OverlayForm();
 
-        // 6) Start flush timer (periodically persist cache to database)
+        // 7) Start flush timer (periodically persist cache to database)
         _flushTimer = new System.Windows.Forms.Timer();
         _flushTimer.Interval = AppSettings.FlushIntervalMs;
         _flushTimer.Tick += OnFlushTimerTick;
         _flushTimer.Start();
         Debug.WriteLine($"Flush timer started (interval: {AppSettings.FlushIntervalMs}ms)");
 
-        // 7) Handle application exit
+        // 8) Handle application exit
         Application.ApplicationExit += OnApplicationExit;
         AppDomain.CurrentDomain.ProcessExit += (_, _) => Cleanup();
 
-        // 8) Run message loop
-        Application.Run(_overlayForm);
+        // 9) Run message loop (no main form — tray icon keeps process alive)
+        Application.Run();
     }
 
     /// <summary>

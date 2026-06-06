@@ -15,6 +15,7 @@ public static class AppSettings
     public static int WindowHeight { get; set; } = 600;
     public static int WindowX { get; set; } = -1;
     public static int WindowY { get; set; } = -1;
+    public static bool IsFirstLaunch { get; set; } = true;
 
     private static string SettingsDir =>
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Kinon");
@@ -47,6 +48,7 @@ public static class AppSettings
                 WindowHeight = data.WindowHeight;
             WindowX = data.WindowX;
             WindowY = data.WindowY;
+            IsFirstLaunch = data.IsFirstLaunch;
         }
         catch (Exception ex)
         {
@@ -70,7 +72,8 @@ public static class AppSettings
                 WindowWidth = WindowWidth,
                 WindowHeight = WindowHeight,
                 WindowX = WindowX,
-                WindowY = WindowY
+                WindowY = WindowY,
+                IsFirstLaunch = IsFirstLaunch
             };
             var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(SettingsPath, json);
@@ -90,5 +93,6 @@ public static class AppSettings
         public int WindowHeight { get; set; } = 600;
         public int WindowX { get; set; } = -1;
         public int WindowY { get; set; } = -1;
+        public bool IsFirstLaunch { get; set; } = true;
     }
 }

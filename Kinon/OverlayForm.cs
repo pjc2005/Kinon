@@ -564,20 +564,6 @@ public sealed class OverlayForm : Form
 
     // --- Visibility management ---
 
-    private bool _firstActivate = true;
-
-    protected override void SetVisibleCore(bool value)
-    {
-        if (_firstActivate)
-        {
-            _firstActivate = false;
-            // Load initial data before first show
-            RefreshData();
-            value = false; // Start hidden
-        }
-        base.SetVisibleCore(value);
-    }
-
     public void ToggleVisible()
     {
         if (Visible)
