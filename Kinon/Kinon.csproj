@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Desktop">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -8,6 +8,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>Kinon</AssemblyName>
     <RootNamespace>Kinon</RootNamespace>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 
   <ItemGroup>
