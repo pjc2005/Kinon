@@ -488,6 +488,7 @@ public sealed class OverlayForm : Form
 
     private void OnSearchTextChanged(object? sender, EventArgs e)
     {
+        if (_searchTimer == null) return; // 初始化期间保护
         _searchTimer.Stop();
         _searchTimer.Start();
     }

@@ -18,6 +18,40 @@ static class Program
     [STAThread]
     static void Main()
     {
+        // Global exception handler
+        Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+        AppDomain.CurrentDomain.UnhandledException += (_, args) =>
+        {
+            var ex = args.ExceptionObject as Exception;
+            var msg = $"Kinon 未处理异常:\n{ex?.GetType()}: {ex?.Message}\n{ex?.StackTrace}";
+            File.AppendAllText(Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "Kinon", "crash.log"), $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {msg}\n---\n");
+            MessageBox.Show(msg, "Kinon - 崩溃", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        };
+        TaskScheduler.UnobservedTaskException += (_, args) =>
+        {
+            args.SetObserved();
+        };
+
+        try
+        {
+            Run();
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Kinon 启动失败:\n{ex.GetType()}: {ex.Message}\n{ex.StackTrace}";
+            Directory.CreateDirectory(Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Kinon"));
+            File.WriteAllText(Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "Kinon", "crash.log"), $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {msg}\n");
+            MessageBox.Show(msg, "Kinon - 启动错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private static void Run()
+    {
         ApplicationConfiguration.Initialize();
 
         // 1) Load settings
